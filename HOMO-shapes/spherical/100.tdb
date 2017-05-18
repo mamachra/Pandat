@@ -1,5 +1,5 @@
 FUNCTION factor 298.15 1; 3000 N!
-FUNCTION Reciprocal_Radius 298.15 (1/100.0)*10**9; 3000 N!
+FUNCTION Reciprocal_Radius 298.15 (1/100.0); 3000 N!
 
 $  case_sensitive
 
