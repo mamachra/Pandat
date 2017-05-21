@@ -1,0 +1,5 @@
+<pbfx version="1.0" encoding="utf-8">
+  <Header copyright="CompuTherm, LLC">
+    <!-- this file defines the syntax for a batch calculation -->
+    <Application name="Pandat" version="2016" />
+  </Header>
