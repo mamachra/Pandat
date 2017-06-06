@@ -1,0 +1,184 @@
+FUNCTION factor 298.15 1.18; 3000 N!
+FUNCTION Reciprocal_Radius 298.15 (1/48.0)*10**9; 3000 N!
+
+$  case_sensitive
+
+
+ELEMENT Ag      Crystal                     107.868           5745          42.55 !
+ELEMENT Sn      BCT_A5                       118.69           6323          51.18 !
+ELEMENT Va      Vacancy                           0              0              0 !
+
+$ Reciprocal_Radius (unit: 1/nm) = 1/r, where r is the radius of the nanoparticle in nm
+$FUNCTION RR 298.15 0; 3000 N!
+$$$$$$ CONTACT ANGLES 
+$FUNCTION x_Ag 298.15 125; 3000 N!
+$FUNCTION x_Sn 298 129; 3000 N!   
+$FUNCTION cosx_Ag 298.15 1; 3000 N!
+$FUNCTION sinx_Ag 298.15 0; 3000 N! 
+Function cosx_Ag 298.15 -0.57357643635; 3000 N!
+Function cosx_Sn 298.15 -0.62932039105; 3000 N!   
+Function sinx_Ag 298.15 0.81915204428; 3000 N!
+Function sinx_Sn 298.15 0.77714596145; 3000 N!
+Function cos3x_Ag 298.15 0.96592582628; 3000 N!
+$Function cos3x_Ag 298.15 1; 3000 N!
+Function cos3x_Sn 298.15 0.89100652418; 3000 N!
+FUNCTION correction 298.15 1; 3000 N!
+$$$$$$$$$$$$$$$$ PARAMETERS NEEDED TO MODEL THE SUBSTRATE EFFECT 
+
+FUNCTION tension_substrate 100 (1.174-0.00013*T); 3000 N!   $$ Nm ==> KNm
+$FUNCTION tension_Ag3Sn_bulk 100 (0.97-5.5897*10**-5*(T-868.77)); 3000 N!
+FUNCTION tension_Ag3Sn_bulk 100 (0.96); 3000 N!
+$FUNCTION tension_Ag3Sn 100 (0.67-5.5897*10**-5*(T-868.77)); 3000 N! $$$ trying to increase the surface tension to study its effect on the graph 
+FUNCTION tension_Ag3Sn 100 tension_Ag3Sn_bulk /(1 + (2*3*10**-8)*Reciprocal_Radius); 3000 N! 
+$FUNCTION tension_Ag3Sn 100 0.3; 3000 N!
+$$$$$ There is relationship b/w surface tension and ridus size; surface tension should be decreased as we lower the radius size. Can not use literature value directly.
+FUNCTION tension_Ag_liquid 100 (0.9256 - 0.000228*(T-1234)); 3000 N!
+FUNCTION tension_Ag_solid 100 (1.1-0.00047*(T-1234)); 3000 N!
+FUNCTION tension_Sn_liquid 100 (0.5472-0.000065*(T-504.99)); 3000 N!
+FUNCTION tension_Sn_solid 100 (0.671 -0.00013*(T-504.99)); 3000 N!  
+FUNCTION V_Ag_liquid 100 11.6*10**-6*(1+0.000098*(T-1234)); 3000 N!
+FUNCTION V_Ag_FCC 100 1.12066*10**-5; 3000 N!
+FUNCTION V_Sn_liquid 100 1.7*10**-5*(1+0.000087*(T-504.99)); 3000 N!
+FUNCTION V_Sn_BCT 100 1.66*10**-5; 3000 N!
+FUNCTION V_Sn_FCC 100 2.09*10**-5; 3000 N! 
+FUNCTION V_Ag3Sn 100 4.53*10**-5; 3000 N! 
+$FUNCTION C1_Ag 100 (16*(1-(-0.573576)))/((9*(1-(-0.573576)))-(1-0.965926)); 3000 N! 
+$FUNCTION C2_Ag 100 (8*((0.81915)**2))/((9*(1-(-0.573576)))-(1-(-0.965926))); 3000 N! 
+$FUNCTION C1_Sn 100 (16*(1-(-0.629320)))/((9*(1-(-0.629320)))-(1-0.891007)); 3000 N!
+$FUNCTION C2_Sn 100 (8*((0.777146)**2))/((9*(1-(-0.629320)))-(1-0.891007)); 3000 N!
+Function C1_Ag 100 1.5*(16*(1-cosx_Ag))/(9*(1-cosx_Ag)-(1-cos3x_Ag)); 3000 N! 
+Function C2_Ag 100 1.5*(8*sinx_Ag**2)/(9*(1-cosx_Ag)-(1-cos3x_Ag)); 3000 N! 
+Function C1_Sn 100 1.5*(16*(1-cosx_Sn))/(9*(1-cosx_Sn)-(1-cos3x_Sn)); 3000 N!
+Function C2_Sn 100 1.5*(8*sinx_Sn**2)/(9*(1-cosx_Sn)-(1-cos3x_Sn)); 3000 N!
+$$$$$$$$$$$$$$$$$$$$$$ END 
+
+
+$ Excess (surface) energies of nanoparticles of the pure phases:
+FUNCTION Ag_FCC_ex 298.15 Reciprocal_Radius*factor*5.64813e-5-15.8013e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION Ag_HCP_ex 298.15 Reciprocal_Radius*factor*5.64813e-5-15.8013e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION Sn_FCC_ex 100 Reciprocal_Radius*factor*4.6185e-5-8.151e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION Sn_HCP_ex 100 Reciprocal_Radius*factor*4.6185e-5-8.151e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION Sn_BCT_ex 100 Reciprocal_Radius*factor*3.668268e-5-6.474e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION Ag_Liq_ex 298.15 Reciprocal_Radius*factor*3.6924e-5-2.85846e-9*Reciprocal_Radius*factor*T-7.7757e-13*Reciprocal_Radius*factor*T**(2); 3000 N!
+FUNCTION Sn_Liq_ex 100 Reciprocal_Radius*factor*2.8280e-5-0.59589e-9*Reciprocal_Radius*factor*T-2.88405e-13*Reciprocal_Radius*factor*T**(2); 3000 N!
+FUNCTION Ag3Sn_ex 100 Reciprocal_Radius*tension_Ag3Sn*V_Ag3Sn*factor*3; 3000 N!
+$FUNCTION Ag3Sn_ex 100 Reciprocal_Radius*13.1823e-5-7.59639e-9*Reciprocal_Radius*T; 3000 N!
+
+
+$FUNCTION Ag_FCC_ex 298.15 Reciprocal_Radius*4.75e4-13.3*Reciprocal_Radius*T; 3000 N! Michael code
+$FUNCTION Ag_HCP_ex 298.15 Reciprocal_Radius*4.75e4-13.3*Reciprocal_Radius*T; 3000 N!
+$FUNCTION Sn_FCC_ex 100 Reciprocal_Radius*3.08e4-5.43*Reciprocal_Radius*T; 3000 N!
+$FUNCTION Sn_HCP_ex 100 Reciprocal_Radius*3.08e4-5.43*Reciprocal_Radius*T; 3000 N!
+$FUNCTION Sn_BCT_ex 100 Reciprocal_Radius*2.45e4-4.32*Reciprocal_Radius*T; 3000 N!
+$FUNCTION Ag_Liq_ex 298.15 Reciprocal_Radius*2.46e4-1.91*Reciprocal_Radius*T-5.18e-4*Reciprocal_Radius*T**(2); 3000 N!
+$FUNCTION Sn_Liq_ex 100 Reciprocal_Radius*1.89e4-3.97e-1*Reciprocal_Radius*T-1.92e-4*Reciprocal_Radius*T**(2); 3000 N!
+$FUNCTION Ag3Sn_ex 100 Reciprocal_Radius*9.06e4*tension_substrate-5.34*Reciprocal_Radius*T;
+$3000 N!
+
+
+
+$$$$$$ Excess  ( surface) energies with SUBSTRATE EFFECT 
+FUNCTION Ag_FCC_sub_ex 298.15 C1_Ag*(Ag_FCC_ex/3) + C2_Ag*(tension_substrate - tension_Ag_solid*cosx_Ag)*V_Ag_FCC*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Ag_HCP_sub_ex 298.15 C1_Ag*(Ag_HCP_ex/3) + C2_Ag*(tension_substrate - tension_Ag_solid*cosx_Ag)*V_Ag_FCC*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Sn_FCC_sub_ex 100 C1_Sn*(Sn_FCC_ex/3) + C2_Sn*(tension_substrate - tension_Sn_solid*cosx_Sn)*V_Sn_FCC*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Sn_BCT_sub_ex 100 C1_Sn*(Sn_BCT_ex/3) + C2_Sn*(tension_substrate - tension_Sn_solid*cosx_Sn)*V_Sn_BCT*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Sn_HCP_sub_ex 100 C1_Sn*(Sn_HCP_ex/3) + C2_Sn*(tension_substrate - tension_Sn_solid*cosx_Sn)*V_Sn_FCC*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Ag_Liq_sub_ex 298.15 C1_Ag*(Ag_Liq_ex/3) + C2_Ag*(tension_substrate - tension_Ag_liquid*cosx_Ag)*V_Ag_liquid*factor*Reciprocal_Radius; 3000 N!
+FUNCTION Sn_Liq_sub_ex 100 C1_Sn*(Sn_Liq_ex/3) + C2_Sn*(tension_substrate - tension_Sn_liquid*cosx_Sn)*V_Sn_liquid*factor*Reciprocal_Radius; 3000 N! 
+
+$ Excess interaction terms due to the size effects:
+FUNCTION L0_Liq_ex 298.15 -Reciprocal_Radius*factor*2.943e-5+17.94e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L1_Liq_ex 298.15 -Reciprocal_Radius*factor*1.857e-5+15.01e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L2_Liq_ex 298.15 -Reciprocal_Radius*factor*4.942e-7+3.157e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L0_FCC_ex 298.15 -Reciprocal_Radius*factor*1.126e-4+51.49e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L1_FCC_ex 298.15 -Reciprocal_Radius*factor*1.319e-4+81.91e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L0_HCP_ex 298.15 -Reciprocal_Radius*factor*1.058e-4+53.04e-9*Reciprocal_Radius*factor*T; 3000 N!
+FUNCTION L1_HCP_ex 298.15 -Reciprocal_Radius*factor*1.124e-4+81.37e-9*Reciprocal_Radius*factor*T; 3000 N!
+
+FUNCTION G_Ag_FCC  298.15  -7209.512+118.202013*T-23.8463314*T*LN(T)-0.00179058*T**2-12011*T**(-1)-3.98587e-007*T**3; 1234.93 Y
+        -15095.252+190.266404*T-33.472*T*LN(T)+1.411773e+029*T**(-9); 3000 N !
+
+$FUNCTION G_Ag_BCT  298.15  -3025.412+118.202013*T-23.8463314*T*LN(T)-0.00179058*T**2-12011*T**(-1)-3.98587e-007*T**3; 1234.93 Y
+$        -10911.152+190.266404*T-33.472*T*LN(T)+1.411773e+029*T**(-9); 3000 N !
+
+
+FUNCTION G_Ag_HCP  298.15  -6909.512+118.502013*T-23.8463314*T*LN(T)-0.001790585*T**2-12011*T**(-1)-3.98587e-007*T**3; 1234.93 Y
+        -14795.252+190.566404*T-33.472*T*LN(T)+1.411773e+029*T**(-9); 3000 N !
+
+
+FUNCTION G_Ag_LIQUID  298.15  3815.564+109.310993*T-23.8463314*T*LN(T)-0.001790585*T**2-12011*T**(-1)-3.98587e-007*T**3-1.033905e-020*T**7; 1234.93 Y
+        -3587.111+180.964656*T-33.472*T*LN(T); 3000 N !
+
+FUNCTION G_Sn_FCC  100  -2448.517+114.305451*T-25.858*T*LN(T)+0.51185e-003*T**2+18440*T**(-1)-3.192767e-006*T**3; 250 Y
+        -345.135+56.983315*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1); 505.078 Y
+        8034.724-4.454731*T-8.2590486*T*LN(T)-16.814429e-003*T**2+2.623131e-006*T**3-1081244*T**(-1)-123.07e023*T**(-9); 800 Y
+        -2746.959+130.53688*T-28.4512*T*LN(T)-123.07e023*T**(-9); 3000 N !
+
+FUNCTION G_Sn_BCT  100  -7958.517+122.765451*T-25.858*T*LN(T)+0.51185e-003*T**2+18440*T**(-1)-3.192767e-006*T**3; 250 Y
+        -5855.135+65.443315*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1); 505.078 Y
+        2524.724+4.005269*T-8.2590486*T*LN(T)-16.814429e-003*T**2+2.623131e-006*T**3-1081244*T**(-1)-123.07e023*T**(-9); 800 Y
+        -8256.959+138.99688*T-28.4512*T*LN(T)-123.07e023*T**(-9); 3000 N!
+        
+FUNCTION G_Sn_BCT1  250  -5855.135+65.443315*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1); 505.078 Y
+        2524.724+4.005269*T-8.2590486*T*LN(T)-16.814429e-003*T**2+2.623131e-006*T**3-1081244*T**(-1)-123.07e023*T**(-9); 800 Y
+        -8256.959+138.99688*T-28.4512*T*LN(T)-123.07e023*T**(-9); 3000 N!
+
+FUNCTION G_Sn_HCP  100  -4058.517+115.119451*T-25.858*T*LN(T)+0.51185e-003*T**2+18440*T**(-1)-3.192767e-006*T**3; 250 Y
+        -1955.135+57.797315*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1); 505.078 Y
+        6424.724-3.640731*T-8.2590486*T*LN(T)-16.814429e-003*T**2+2.623131e-006*T**3-1081244*T**(-1)-123.07e023*T**(-9); 800 Y
+        -4356.959+131.35088*T-28.4512*T*LN(T)-123.07e023*T**(-9); 3000 N !
+
+FUNCTION G_Sn_LIQUID  100  -855.425+108.677684*T-25.858*T*LN(T)+0.51185e-003*T**2-3.192767e-006*T**(3)+18440*T**(-1)+147.031e-020*T**7; 250 Y
+        1247.957+51.355548*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1)+147.031e-020*T**7; 505.078 Y
+        9496.31-9.809114*T-8.2590486*T*LN(T)-16.814428e-003*T**2+2.623131e-006*T**3-1081244*T**(-1); 800 Y
+        -1285.372+125.182498*T-28.4512*T*LN(T); 3000 N!
+        
+
+       
+FUNCTION test 298.15 -4563.81-1.40350*T; 3000 N !
+
+
+FUNCTION FCC 298.15  0.75*(300+0.30*T -7209.512+118.202013*T-23.8463314*T*LN(T)-0.001790585*T**2-12011*T**(-1)-3.98587e-007*T**3); 1234.93 Y
+			 0.75*(300+0.30*T -15095.252+190.266404*T-33.472*T*LN(T)+1.411773e+029*T**(-9)); 3000 N !
+			
+			
+FUNCTION BCT 298.15 0.25*(3900-7.646*T-5855.135+65.443315*T-15.961*T*LN(T)-18.8702e-003*T**2+3.121167e-006*T**3-61960*T**(-1)); 505.078 Y
+		  0.25*(3900-7.646*T +  2524.724+4.005269*T-8.2590486*T*LN(T)-16.814429e-003*T**2+2.623131e-006*T**3-1081244*T**(-1)-123.07e023*T**(-9)); 800 Y
+		 0.25*( 3900-7.646*T-8256.959+138.99688*T-28.4512*T*LN(T)-123.07e023*T**(-9)); 3000 N!
+
+$UNCTION G_Ag3Sn  298.15 test + 0.75*(G_Ag_FCC+300-0.30*T) + 0.25*(3900-7.646*T+G_Sn_BCT1); 3000 N !
+        
+Phase FCC % 1 1 !
+Constituent FCC : Ag, Sn : !
+Parameter G(FCC, Ag; 0) 298.15  G_Ag_FCC+Ag_FCC_sub_ex; 6000 N !
+Parameter G(FCC, Sn; 0) 100  G_Sn_FCC+Sn_FCC_sub_ex; 6000 N !
+Parameter G(FCC, Ag, Sn; 0)  298.15  4381.8+12.57*T+L0_FCC_ex; 6000 N !
+Parameter G(FCC, Ag, Sn; 1)  298.15  -41594.5+L1_FCC_ex; 6000 N !
+
+Phase HCP % 1 1 !
+Constituent HCP : Ag, Sn : !
+Parameter G(HCP, Ag; 0) 298.15  G_Ag_HCP+Ag_HCP_sub_ex; 6000 N !
+Parameter G(HCP, Sn; 0) 100  G_Sn_HCP+Sn_HCP_sub_ex; 6000 N !
+Parameter G(HCP, Ag, Sn; 0)  298.15  297.67+10.62*T+L0_HCP_ex; 6000 N !
+Parameter G(HCP, Ag, Sn; 1)  298.15  -38953.88+L1_HCP_ex; 6000 N !i
+
+Phase BCT % 1 1 !
+Constituent BCT : Sn : !
+Parameter G(BCT, Sn; 0) 298.15 G_Sn_BCT+Sn_BCT_sub_ex; 6000 N !
+
+Phase Liquid % 1 1 !
+Constituent Liquid : Ag, Sn : !
+Parameter G(Liquid, Ag; 0) 298.15  G_Ag_LIQUID+Ag_Liq_sub_ex; 6000 N !
+Parameter G(Liquid, Sn; 0) 298.15  G_Sn_LIQUID+Sn_Liq_sub_ex; 6000 N !
+Parameter G(Liquid, Ag, Sn; 0)  298.15  -4908.719-4.702*T+L0_Liq_ex; 6000 N !
+Parameter G(Liquid, Ag, Sn; 1)  298.15  -16988+4.702*T+L1_Liq_ex; 6000 N !
+Parameter G(Liquid, Ag, Sn; 2)  298.15  -6840.2+L2_Liq_ex; 6000 N !
+
+Phase Ag3Sn  % 2 0.75 0.25 ! 
+Constituent Ag3Sn : Ag:Sn : ! 
+Parameter G(Ag3Sn, Ag:Sn; 0 ) 298.15 test+FCC+BCT+Ag3Sn_ex ; 6000 N ! 
+$Parameter G(Ag3Sn, Ag:Sn; 0 ) 298.15 test+Ag3Sn_ex ; 6000 N !
+
+
+
+
